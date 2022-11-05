@@ -55,6 +55,13 @@ describe('enhanced-error', () => {
         const err = logErrorAndReturn('Hello World');
         err.message.should.equal('Hello World');
       })
+      it('Should handle non-Error errors', () => {
+        try {
+          throw true;
+        } catch (err) {
+          logErrorAndReturn(err, {});
+        }
+      })
     });
   });
 });

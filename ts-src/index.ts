@@ -95,6 +95,10 @@ const getLoggerSpec = (err, log) =>
     .with({log: P.instanceOf(LoggerAdapter), err: P.string}, ({log, err}) => {
       return {log, err: new EnhancedError(err)};
     })
+    .with({log: P.instanceOf(LoggerAdapter), err: P.any}, ({log, err}) => {
+      const errorStr = err ? 'undefined': err.toString();
+      return {log, err: new EnhancedError(errorStr)};
+    })
     .with({log: P.when(log => isLogExecutionContext(log)), err: P.instanceOf(EnhancedError)}, ({log, err}) => {
       const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method);
       return {log: logA, err};
@@ -107,6 +111,11 @@ const getLoggerSpec = (err, log) =>
       const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method);
       return {log: logA, err: new EnhancedError(err)};
     })
+    .with({log: P.when(log => isLogExecutionContext(log)), err: P.any}, ({log, err}) => {
+      const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method);
+      const errorStr = err ? 'undefined': err.toString();
+      return {log: logA, err: new EnhancedError(errorStr)};
+    })
     .with({log: P.nullish, err: P.instanceOf(EnhancedError)}, ({err}) => {
       const log = new LoggerAdapter({}, module, source, method);
       return {log, err};
@@ -115,9 +124,22 @@ const getLoggerSpec = (err, log) =>
       const log = new LoggerAdapter({}, module, source, method);
       return {log, err: new EnhancedError(err)};
     })
+    .with({log: P.nullish, err: P.string}, ({err}) => {
+      const log = new LoggerAdapter({}, module, source, method);
+      return {log, err: new EnhancedError(err)};
+    })
+    .with({log: P.nullish, err: P.any}, ({err}) => {
+      const log = new LoggerAdapter({}, module, source, method);
+      const errorStr = err ? 'undefined': err.toString();
+      return {log, err: new EnhancedError(errorStr)};
+    })
     .with({err: P.string}, ({err}) => {
       const log = new LoggerAdapter({}, module, source, method);
       return {log, err: new EnhancedError(err)};
+    })
+    .with({err: P.any}, ({err}) => {
+      const log = new LoggerAdapter({}, module, source, method);
+      return {log, err: new EnhancedError(err ? 'undefined': err.toString())};
     })
     .with(undefined, () => {
       throw new Error('An error or error string must be passed');
