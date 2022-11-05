@@ -26,9 +26,7 @@ export const npmu  = (cb) => {
     }, {
       path: join(__dirname, '../logger-adapter'), packageName: '@franzzemen/logger-adapter',
     }, {
-      path: join(__dirname, '../NEXT_FOLDER'), packageName: '@franzzemen/NEXT',
-    }, {
-      path: join(__dirname, './'), packageName: 'INSERT FINAL',
+      path: join(__dirname, './'), packageName: '@franzzemen/enhanced-error',
     }])
     .then(() => {
       console.log('cb...');
