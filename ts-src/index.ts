@@ -9,6 +9,7 @@ import {match, P} from 'ts-pattern';
 import {isLogExecutionContext, LogExecutionContext, LoggerAdapter} from '@franzzemen/logger-adapter';
 
 
+
 export class EnhancedError extends Error {
   isOriginalError = true;
 
@@ -79,6 +80,10 @@ type Input =
   | { err: string };
 
 
+const module = '@franzzemen/enhanced-error';
+const source = 'index';
+const method = 'getLoggerSpec';
+
 const getLoggerSpec = (err, log) =>
   match<Input, LoggerSpec>({log, err})
     .with({log: P.instanceOf(LoggerAdapter), err: P.instanceOf(EnhancedError)}, ({log, err}) => {
@@ -91,27 +96,27 @@ const getLoggerSpec = (err, log) =>
       return {log, err: new EnhancedError(err)};
     })
     .with({log: P.when(log => isLogExecutionContext(log)), err: P.instanceOf(EnhancedError)}, ({log, err}) => {
-      const logA = new LoggerAdapter(log as LogExecutionContext);
+      const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method);
       return {log: logA, err};
     })
     .with({log: P.when(log => isLogExecutionContext(log)), err: P.instanceOf(Error)}, ({log, err}) => {
-      const logA = new LoggerAdapter(log as LogExecutionContext);
+      const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method)
       return {log: logA, err: new EnhancedError(err)};
     })
     .with({log: P.when(log => isLogExecutionContext(log)), err: P.string}, ({log, err}) => {
-      const logA = new LoggerAdapter(log as LogExecutionContext);
+      const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method);
       return {log: logA, err: new EnhancedError(err)};
     })
     .with({log: P.nullish, err: P.instanceOf(EnhancedError)}, ({err}) => {
-      const log = new LoggerAdapter();
+      const log = new LoggerAdapter({}, module, source, method);
       return {log, err};
     })
     .with({log: P.nullish, err: P.instanceOf(Error)}, ({err}) => {
-      const log = new LoggerAdapter();
+      const log = new LoggerAdapter({}, module, source, method);
       return {log, err: new EnhancedError(err)};
     })
     .with({err: P.string}, ({err}) => {
-      const log = new LoggerAdapter();
+      const log = new LoggerAdapter({}, module, source, method);
       return {log, err: new EnhancedError(err)};
     })
     .with(undefined, () => {
