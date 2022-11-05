@@ -9,6 +9,63 @@ import {match, P} from 'ts-pattern';
 import {isLogExecutionContext, LogExecutionContext, LoggerAdapter} from '@franzzemen/logger-adapter';
 
 
+export class EnhancedError extends Error {
+  isOriginalError = true;
+
+  constructor(protected err: string | Error, public isLogged = false) {
+    super(typeof err === 'string' ? err : err.message);
+    this.isOriginalError = typeof err === 'object';
+  }
+
+  toString(): string {
+    if (this.err) {
+      return this.err.toString();
+    } else {
+      return super.toString();
+    }
+  }
+
+  toLocaleString(): string {
+    if (this.err) {
+      return this.err.toLocaleString();
+    } else {
+      return super.toLocaleString();
+    }
+  }
+
+  valueOf(): Object {
+    if (this.err) {
+      return this.err.valueOf();
+    } else {
+      return super.valueOf();
+    }
+  }
+
+  hasOwnProperty(v: PropertyKey): boolean {
+    if (this.err) {
+      return this.err.hasOwnProperty(v);
+    } else {
+      return super.hasOwnProperty(v);
+    }
+  }
+
+  isPrototypeOf(v: Object): boolean {
+    if (this.err) {
+      return this.err.isPrototypeOf(v);
+    } else {
+      return super.isPrototypeOf(v);
+    }
+  }
+
+  propertyIsEnumerable(v: PropertyKey): boolean {
+    if (this.err) {
+      return this.err.propertyIsEnumerable(v);
+    } else {
+      return super.propertyIsEnumerable(v);
+    }
+  }
+}
+
 type LoggerSpec = { err: EnhancedError, log: LoggerAdapter };
 type Input =
   | { log: LoggerAdapter, err: EnhancedError }
@@ -65,165 +122,26 @@ const getLoggerSpec = (err, log) =>
     });
 
 
-export function logErrorAndThrow(error: EnhancedError | Error | string, logConfig?: LoggerAdapter | LogExecutionContext) {
+
+function logError(error: EnhancedError | Error | string, logConfig?: LoggerAdapter | LogExecutionContext) {
   let {err, log} = getLoggerSpec(error, logConfig);
   if (!err.isLogged) {
     err.isLogged = true;
     log.error(err);
   }
-  throw err;
+  return err;
+}
 
-
-  /*
-  if (typeof err === 'string') {
-    const error = new EnhancedError(err);
-    error.isLogged = true;
-    if (log) {
-      log.error(error);
-    } else {
-      const log = new LoggerAdapter(ec, 're-common', 'enhanced-error', 'logErrorAndThrow');
-      log.info('No logger provided, using executive context');
-      log.error(error);
-    }
-    throw error;
-  } else {
-    if (err instanceof EnhancedError) {
-      if (err.isLogged) {
-        throw err;
-      } else {
-        err.isLogged = true;
-        if (log) {
-          log.error(err);
-        } else {
-          const log = new LoggerAdapter(ec, 're-common', 'enhanced-error', 'logErrorAndThrow');
-          log.info('No logger provided, using executive context');
-          log.error(err);
-        }
-        throw err;
-      }
-    } else {
-      if (log) {
-        log.error(err);
-      } else {
-        const log = new LoggerAdapter(ec, 're-common', 'enhanced-error', 'logErrorAndThrow');
-        log.info('No logger provided, using executive context');
-        log.error(err);
-      }
-      throw new EnhancedError('Wrapped', err, true);
-    }
-  }
-
-   */
+export function logErrorAndThrow(error: EnhancedError | Error | string, logConfig?: LoggerAdapter | LogExecutionContext) {
+  throw logError(error, logConfig);
 }
 
 /**
  * Useful for handling Promise errors ( throw logErrorAndReturn(err, log, ec);
- * @param err
- * @param log
- * @param ec
+ * @param error
+ * @param logConfig
  */
-export function logErrorAndReturn(err: Error | string, log?: LoggerAdapter, ec?: LogExecutionContext) {
-  if (typeof err === 'string') {
-    const error = new EnhancedError(err);
-    error.isLogged = true;
-    if (log) {
-      log.error(error);
-    } else {
-      const log = new LoggerAdapter(ec, 're-common', 'enhanced-error', 'logErrorAndThrow');
-      log.warn('No logger provided, using default');
-      log.error(error);
-    }
-    return error;
-  }
-  if (err instanceof EnhancedError) {
-    if (err.isLogged) {
-      return err;
-    } else {
-      err.isLogged = true;
-      if (log) {
-        log.error(err);
-      } else {
-        const log = new LoggerAdapter(ec, 're-common', 'enhanced-error', 'logErrorAndThrow');
-        log.warn('No logger provided, using default');
-        log.error(err);
-      }
-      return err;
-    }
-  } else {
-    if (log) {
-      log.error(err);
-    } else {
-      const log = new LoggerAdapter(ec, 're-common', 'enhanced-error', 'logErrorAndThrow');
-      log.warn('No logger provided, using default');
-      log.error(err);
-    }
-    return new EnhancedError( err, true);
-  }
+export function logErrorAndReturn(error: EnhancedError | Error | string, logConfig?: LoggerAdapter | LogExecutionContext) {
+  return logError(error, logConfig);
 }
 
-export class EnhancedError extends Error {
-  isOriginalError = true;
-
-  constructor(protected err: string | Error, public isLogged = false) {
-    super(typeof err === 'string' ? err : err.message);
-    this.isOriginalError = typeof err === 'object';
-  }
-
-
-  /*
-  constructor(message?: string, protected err: Error = undefined, public isLogged = false) {
-    super(err ? err.message : message);
-    if (err) {
-      this.isOriginalError = false;
-    }
-  }
-*/
-
-  toString(): string {
-    if (this.err) {
-      return this.err.toString();
-    } else {
-      return super.toString();
-    }
-  }
-
-  toLocaleString(): string {
-    if (this.err) {
-      return this.err.toLocaleString();
-    } else {
-      return super.toLocaleString();
-    }
-  }
-
-  valueOf(): Object {
-    if (this.err) {
-      return this.err.valueOf();
-    } else {
-      return super.valueOf();
-    }
-  }
-
-  hasOwnProperty(v: PropertyKey): boolean {
-    if (this.err) {
-      return this.err.hasOwnProperty(v);
-    } else {
-      return super.hasOwnProperty(v);
-    }
-  }
-
-  isPrototypeOf(v: Object): boolean {
-    if (this.err) {
-      return this.err.isPrototypeOf(v);
-    } else {
-      return super.isPrototypeOf(v);
-    }
-  }
-
-  propertyIsEnumerable(v: PropertyKey): boolean {
-    if (this.err) {
-      return this.err.propertyIsEnumerable(v);
-    } else {
-      return super.propertyIsEnumerable(v);
-    }
-  }
-}
