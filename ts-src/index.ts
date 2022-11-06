@@ -2,9 +2,6 @@
 Created by Franz Zemen 11/04/2022
 License Type: MIT
 */
-// Re-export Logger Adapter
-export * from '@franzzemen/logger-adapter';
-
 import {match, P} from 'ts-pattern';
 import {isLogExecutionContext, LogExecutionContext, LoggerAdapter} from '@franzzemen/logger-adapter';
 
