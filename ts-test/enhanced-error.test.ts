@@ -2,9 +2,10 @@
 Created by Franz Zemen 11/04/2022
 License Type: MIT
 */
-import 'mocha';
+// @ts-ignore
+import {EnhancedError, logErrorAndReturn, logErrorAndThrow} from '@franzzemen/enhanced-error';
 import chai from 'chai';
-import {EnhancedError, logErrorAndReturn, logErrorAndThrow} from '../publish/index.js';
+import 'mocha';
 
 let should = chai.should();
 let expect = chai.expect;
@@ -24,7 +25,7 @@ describe('enhanced-error', () => {
           (err instanceof EnhancedError).should.be.true;
           err.isLogged.should.be.true;
         }
-      })
+      });
       it('Should wrap and log an error', () => {
         try {
           throw new Error('Some Error');
@@ -42,26 +43,26 @@ describe('enhanced-error', () => {
             }
           }
         }
-      })
+      });
       it('Should get super.message', () => {
         const err = new EnhancedError('Hello World');
         err.message.should.equal('Hello World');
-      })
+      });
       it('Should get contained error message', () => {
         const err = new EnhancedError(new Error('Goodbye'));
         err.message.should.equal('Goodbye');
-      })
+      });
       it('Should return an error with string initialzation', () => {
         const err = logErrorAndReturn('Hello World');
         err.message.should.equal('Hello World');
-      })
+      });
       it('Should handle non-Error errors', () => {
         try {
           throw true;
         } catch (err) {
           logErrorAndReturn(err, {});
         }
-      })
+      });
     });
   });
 });
