@@ -2,8 +2,7 @@
 Created by Franz Zemen 11/04/2022
 License Type: MIT
 */
-// @ts-ignore
-import {EnhancedError, logErrorAndReturn, logErrorAndThrow} from '@franzzemen/enhanced-error';
+import {EnhancedError, logErrorAndReturn, logErrorAndThrow} from '../publish/mjs/index.js';
 import chai from 'chai';
 import 'mocha';
 
