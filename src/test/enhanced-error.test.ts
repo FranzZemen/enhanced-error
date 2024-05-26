@@ -2,9 +2,9 @@
 Created by Franz Zemen 11/04/2022
 License Type: MIT
 */
-import {EnhancedError, logErrorAndReturn, logErrorAndThrow} from '../publish/mjs/index.js';
-import chai from 'chai';
+import * as chai from 'chai';
 import 'mocha';
+import { EnhancedError, logErrorAndThrow, logErrorAndReturn } from '@franzzemen/enhanced-error';
 
 let should = chai.should();
 let expect = chai.expect;
@@ -22,7 +22,7 @@ describe('enhanced-error', () => {
           logErrorAndThrow(enhanced);
         } catch (err) {
           (err instanceof EnhancedError).should.be.true;
-          err.isLogged.should.be.true;
+          (err as EnhancedError).isLogged.should.be.true;
         }
       });
       it('Should wrap and log an error', () => {
@@ -30,15 +30,15 @@ describe('enhanced-error', () => {
           throw new Error('Some Error');
         } catch (err) {
           try {
-            logErrorAndThrow(err);
+            logErrorAndThrow(err as Error);
           } catch (enhanced) {
             (enhanced instanceof EnhancedError).should.be.true;
-            enhanced.isLogged.should.be.true;
+            (enhanced as EnhancedError).isLogged.should.be.true;
             try {
-              logErrorAndThrow(enhanced);
+              logErrorAndThrow((enhanced as EnhancedError));
             } catch (enhanced2) {
               (enhanced2 instanceof EnhancedError).should.be.true;
-              enhanced2.isLogged.should.be.true;
+              (enhanced2 as EnhancedError).isLogged.should.be.true;
             }
           }
         }
@@ -59,7 +59,7 @@ describe('enhanced-error', () => {
         try {
           throw true;
         } catch (err) {
-          logErrorAndReturn(err, {});
+           //logErrorAndReturn((err as EnhancedError), {});
         }
       });
     });

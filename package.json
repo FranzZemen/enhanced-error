@@ -3,13 +3,9 @@
   "version": "3.0.1",
   "description": "Enhanced Errors",
   "type": "module",
-  "main": "./publish/cjs/index.js",
-  "module": "publish/mjs/index.js",
-  "types": "publish/mjs/index.d.ts",
   "exports": {
     ".": {
-      "import": "./publish/mjs/index.js",
-      "require": "./publish/cjs/index.js"
+      "import": "./src/project/index.ts"
     }
   },
   "scripts": {
@@ -29,20 +25,17 @@
   },
   "homepage": "https://github.com/FranzZemen/enhanced-error#readme",
   "devDependencies": {
-    "@franzzemen/gulp-base": "^19.0.1",
-    "@franzzemen/npmu": "^4.0.4",
-    "@types/chai": "^4.3.4",
-    "@types/mocha": "^10.0.0",
-    "@types/node": "^18.11.9",
-    "chai": "^4.3.7",
-    "fastest-validator": "^1.15.0",
-    "gulp": "^4.0.2",
-    "gulp-mocha": "^8.0.0",
-    "mocha": "^10.1.0",
-    "typescript": "^4.9.3"
+    "@types/chai": "^4.3.16",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.12",
+    "chai": "^5.1.1",
+    "fastest-validator": "^1.18.0",
+    "mocha": "^10.4.0",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@franzzemen/logger-adapter": "^6.0.1",
-    "ts-pattern": "^4.0.6"
+    "@franzzemen/build-system": "^5.1.0",
+    "@franzzemen/logger-adapter": "^10.2.1",
+    "ts-pattern": "^5.1.2"
   }
 }

@@ -15,7 +15,7 @@ export class EnhancedError extends Error {
     this.isOriginalError = typeof err === 'object';
   }
 
-  toString(): string {
+  override toString(): string {
     if (this.err) {
       return this.err.toString();
     } else {
@@ -23,7 +23,7 @@ export class EnhancedError extends Error {
     }
   }
 
-  toLocaleString(): string {
+  override toLocaleString(): string {
     if (this.err) {
       return this.err.toLocaleString();
     } else {
@@ -31,7 +31,7 @@ export class EnhancedError extends Error {
     }
   }
 
-  valueOf(): Object {
+  override valueOf(): Object {
     if (this.err) {
       return this.err.valueOf();
     } else {
@@ -39,7 +39,7 @@ export class EnhancedError extends Error {
     }
   }
 
-  hasOwnProperty(v: PropertyKey): boolean {
+  override hasOwnProperty(v: PropertyKey): boolean {
     if (this.err) {
       return this.err.hasOwnProperty(v);
     } else {
@@ -47,7 +47,7 @@ export class EnhancedError extends Error {
     }
   }
 
-  isPrototypeOf(v: Object): boolean {
+  override isPrototypeOf(v: Object): boolean {
     if (this.err) {
       return this.err.isPrototypeOf(v);
     } else {
@@ -55,7 +55,7 @@ export class EnhancedError extends Error {
     }
   }
 
-  propertyIsEnumerable(v: PropertyKey): boolean {
+  override propertyIsEnumerable(v: PropertyKey): boolean {
     if (this.err) {
       return this.err.propertyIsEnumerable(v);
     } else {
@@ -81,7 +81,7 @@ const module = '@franzzemen/enhanced-error';
 const source = 'index';
 const method = 'getLoggerSpec';
 
-const getLoggerSpec = (err, log) =>
+const getLoggerSpec = (err: any, log: any) =>
   match<Input, LoggerSpec>({log, err})
     .with({log: P.instanceOf(LoggerAdapter), err: P.instanceOf(EnhancedError)}, ({log, err}) => {
       return {log, err};
@@ -136,10 +136,7 @@ const getLoggerSpec = (err, log) =>
     })
     .with({err: P.any}, ({err}) => {
       const log = new LoggerAdapter({}, module, source, method);
-      return {log, err: new EnhancedError(err ? 'undefined': err.toString())};
-    })
-    .with(undefined, () => {
-      throw new Error('An error or error string must be passed');
+      return {log, err: new EnhancedError(err ? 'undefined': (err as Error).toString())};
     })
     .otherwise(() => {
       throw new Error('Unreachable code');
