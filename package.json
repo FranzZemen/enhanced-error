@@ -1,6 +1,6 @@
 {
   "name": "@franzzemen/enhanced-error",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Enhanced Errors",
   "type": "module",
   "exports": {
