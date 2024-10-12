@@ -25,17 +25,16 @@
   },
   "homepage": "https://github.com/FranzZemen/enhanced-error#readme",
   "devDependencies": {
-    "@types/chai": "^4.3.16",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.12.12",
+    "@types/chai": "^5.0.0",
+    "@types/mocha": "^10.0.9",
+    "@types/node": "^22.7.5",
     "chai": "^5.1.1",
-    "fastest-validator": "^1.18.0",
-    "mocha": "^10.4.0",
-    "typescript": "^5.4.5"
+    "fastest-validator": "^1.19.0",
+    "mocha": "^10.7.3",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
-    "@franzzemen/build-system": "^5.1.0",
-    "@franzzemen/logger-adapter": "^10.2.1",
-    "ts-pattern": "^5.1.2"
+    "@franzzemen/build-system": "^12.1.1",
+    "@franzzemen/logger-adapter": "^14.0.18"
   }
 }

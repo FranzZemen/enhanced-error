@@ -2,9 +2,7 @@
 Created by Franz Zemen 11/04/2022
 License Type: MIT
 */
-import {match, P} from 'ts-pattern';
-import {isLogExecutionContext, LogExecutionContext, LoggerAdapter} from '@franzzemen/logger-adapter';
-
+import {LoggerAdapter} from '@franzzemen/logger-adapter';
 
 
 export class EnhancedError extends Error {
@@ -64,88 +62,11 @@ export class EnhancedError extends Error {
   }
 }
 
-type LoggerSpec = { err: EnhancedError, log: LoggerAdapter };
-type Input =
-  | { log: LoggerAdapter, err: EnhancedError }
-  | { log: LoggerAdapter, err: Error }
-  | { log: LoggerAdapter, err: string }
-  | { log: LogExecutionContext, err: EnhancedError }
-  | { log: LogExecutionContext, err: Error }
-  | { log: LogExecutionContext, err: string }
-  | { err: EnhancedError }
-  | { err: Error }
-  | { err: string };
-
-
-const module = '@franzzemen/enhanced-error';
-const source = 'index';
-const method = 'getLoggerSpec';
-
-const getLoggerSpec = (err: any, log: any) =>
-  match<Input, LoggerSpec>({log, err})
-    .with({log: P.instanceOf(LoggerAdapter), err: P.instanceOf(EnhancedError)}, ({log, err}) => {
-      return {log, err};
-    })
-    .with({log: P.instanceOf(LoggerAdapter), err: P.instanceOf(Error)}, ({log, err}) => {
-      return {log, err: new EnhancedError(err)};
-    })
-    .with({log: P.instanceOf(LoggerAdapter), err: P.string}, ({log, err}) => {
-      return {log, err: new EnhancedError(err)};
-    })
-    .with({log: P.instanceOf(LoggerAdapter), err: P.any}, ({log, err}) => {
-      const errorStr = err ? 'undefined': err.toString();
-      return {log, err: new EnhancedError(errorStr)};
-    })
-    .with({log: P.when(log => isLogExecutionContext(log)), err: P.instanceOf(EnhancedError)}, ({log, err}) => {
-      const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method);
-      return {log: logA, err};
-    })
-    .with({log: P.when(log => isLogExecutionContext(log)), err: P.instanceOf(Error)}, ({log, err}) => {
-      const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method)
-      return {log: logA, err: new EnhancedError(err)};
-    })
-    .with({log: P.when(log => isLogExecutionContext(log)), err: P.string}, ({log, err}) => {
-      const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method);
-      return {log: logA, err: new EnhancedError(err)};
-    })
-    .with({log: P.when(log => isLogExecutionContext(log)), err: P.any}, ({log, err}) => {
-      const logA = new LoggerAdapter(log as LogExecutionContext, module, source, method);
-      const errorStr = err ? 'undefined': err.toString();
-      return {log: logA, err: new EnhancedError(errorStr)};
-    })
-    .with({log: P.nullish, err: P.instanceOf(EnhancedError)}, ({err}) => {
-      const log = new LoggerAdapter({}, module, source, method);
-      return {log, err};
-    })
-    .with({log: P.nullish, err: P.instanceOf(Error)}, ({err}) => {
-      const log = new LoggerAdapter({}, module, source, method);
-      return {log, err: new EnhancedError(err)};
-    })
-    .with({log: P.nullish, err: P.string}, ({err}) => {
-      const log = new LoggerAdapter({}, module, source, method);
-      return {log, err: new EnhancedError(err)};
-    })
-    .with({log: P.nullish, err: P.any}, ({err}) => {
-      const log = new LoggerAdapter({}, module, source, method);
-      const errorStr = err ? 'undefined': err.toString();
-      return {log, err: new EnhancedError(errorStr)};
-    })
-    .with({err: P.string}, ({err}) => {
-      const log = new LoggerAdapter({}, module, source, method);
-      return {log, err: new EnhancedError(err)};
-    })
-    .with({err: P.any}, ({err}) => {
-      const log = new LoggerAdapter({}, module, source, method);
-      return {log, err: new EnhancedError(err ? 'undefined': (err as Error).toString())};
-    })
-    .otherwise(() => {
-      throw new Error('Unreachable code');
-    });
-
-
-
-function logError(error: EnhancedError | Error | string, logConfig?: LoggerAdapter | LogExecutionContext) {
-  let {err, log} = getLoggerSpec(error, logConfig);
+function logError(error: EnhancedError | Error | string, log: LoggerAdapter): EnhancedError {
+  let err = error as EnhancedError;
+  if (!(error instanceof EnhancedError)) {
+    err = new EnhancedError(error);
+  }
   if (!err.isLogged) {
     err.isLogged = true;
     log.error(err);
@@ -153,8 +74,8 @@ function logError(error: EnhancedError | Error | string, logConfig?: LoggerAdapt
   return err;
 }
 
-export function logErrorAndThrow(error: EnhancedError | Error | string, logConfig?: LoggerAdapter | LogExecutionContext) {
-  throw logError(error, logConfig);
+export function logErrorAndThrow(error: EnhancedError | Error | string, log: LoggerAdapter) {
+  throw logError(error, log);
 }
 
 /**
@@ -162,7 +83,7 @@ export function logErrorAndThrow(error: EnhancedError | Error | string, logConfi
  * @param error
  * @param logConfig
  */
-export function logErrorAndReturn(error: EnhancedError | Error | string, logConfig?: LoggerAdapter | LogExecutionContext) {
-  return logError(error, logConfig);
+export function logErrorAndReturn(error: EnhancedError | Error | string, log: LoggerAdapter) {
+  return logError(error, log);
 }
 
