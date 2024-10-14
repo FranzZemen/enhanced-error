@@ -9,8 +9,8 @@ export class EnhancedError extends Error {
   isOriginalError = true;
 
 
-  constructor(error?: Error, protected msg: string = '', public isLogged: boolean = false) {
-    super(msg.length > 0 ? msg : error?.message);
+  constructor(error?: unknown, msg: string = '', public isLogged: boolean = false) {
+    super(msg.length > 0 ? msg : error instanceof Error? error?.message : 'Unknown Error');
     if(error) {
       this.cause = error;
       this.isOriginalError = false;
@@ -26,15 +26,15 @@ export class EnhancedError extends Error {
  * @param error
  * @param log
  */
-export function logAndEnhanceError(log: LoggerAdapter, error?: Error, message?: string): EnhancedError {
-  let err = error as EnhancedError;
+export function logAndEnhanceError(log: LoggerAdapter, error?: unknown, message?: string): EnhancedError {
+  let enhancedError = error as EnhancedError;
   if (!(error instanceof EnhancedError)) {
-    err = new EnhancedError(error, message, false);
+    enhancedError = new EnhancedError(error, message, false);
   }
-  if (!err.isLogged) {
-    log.error(err);
-    err.isLogged = true;
+  if (!enhancedError.isLogged) {
+    log.error(enhancedError);
+    enhancedError.isLogged = true;
   }
-  return err;
+  return enhancedError;
 }
 
