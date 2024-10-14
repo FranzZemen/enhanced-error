@@ -62,7 +62,13 @@ export class EnhancedError extends Error {
   }
 }
 
-function logError(error: EnhancedError | Error | string, log: LoggerAdapter): EnhancedError {
+/**
+ * Create an enhanced error and log it, marking it as logged.  If the error is already enhanced, it will not log again.
+ * This avoids the forever logs on error.
+ * @param error
+ * @param log
+ */
+export function logAndEnhanceError(error: EnhancedError | Error | string, log: LoggerAdapter): EnhancedError {
   let err = error as EnhancedError;
   if (!(error instanceof EnhancedError)) {
     err = new EnhancedError(error);
@@ -72,18 +78,5 @@ function logError(error: EnhancedError | Error | string, log: LoggerAdapter): En
     log.error(err);
   }
   return err;
-}
-
-export function logErrorAndThrow(error: EnhancedError | Error | string, log: LoggerAdapter) {
-  throw logError(error, log);
-}
-
-/**
- * Useful for handling Promise errors ( throw logErrorAndReturn(err, log, ec);
- * @param error
- * @param logConfig
- */
-export function logErrorAndReturn(error: EnhancedError | Error | string, log: LoggerAdapter) {
-  return logError(error, log);
 }
 

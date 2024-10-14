@@ -4,7 +4,7 @@ License Type: MIT
 */
 import * as chai from 'chai';
 import 'mocha';
-import { EnhancedError, logErrorAndThrow, logErrorAndReturn } from '@franzzemen/enhanced-error';
+import { EnhancedError } from '@franzzemen/enhanced-error';
 
 let should = chai.should();
 let expect = chai.expect;
