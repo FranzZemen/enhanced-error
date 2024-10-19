@@ -28,10 +28,13 @@ export class EnhancedError extends Error {
  */
 export function logAndEnhanceError(log: LoggerAdapter, error?: unknown, message?: string): EnhancedError {
   let enhancedError = error as EnhancedError;
-  if (!(error instanceof EnhancedError)) {
+  if (!error || !(error instanceof EnhancedError)) {
     enhancedError = new EnhancedError(error, message, false);
   }
-  if (!enhancedError.isLogged) {
+  if(enhancedError.isLogged) {
+    // We still want to log any additional text
+    log.error(enhancedError.message);
+  } else {
     log.error(enhancedError);
     enhancedError.isLogged = true;
   }
