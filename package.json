@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/FranzZemen/enhanced-error#readme",
   "devDependencies": {
-    "@types/chai": "^5.0.0",
+    "@types/chai": "^5.0.1",
     "@types/mocha": "^10.0.9",
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.8.2",
     "chai": "^5.1.2",
     "fastest-validator": "^1.19.0",
     "mocha": "^10.7.3",
