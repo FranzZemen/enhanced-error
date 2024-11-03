@@ -34,7 +34,7 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "@franzzemen/build-system": "^12.1.2",
+    "@franzzemen/build-system": "^13.0.6",
     "@franzzemen/logger-adapter": "^14.0.34"
   }
 }
