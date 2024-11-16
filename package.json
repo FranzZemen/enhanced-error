@@ -35,6 +35,6 @@
   },
   "dependencies": {
     "@franzzemen/build-system": "^13.0.6",
-    "@franzzemen/logger-adapter": "^14.0.37"
+    "@franzzemen/logger-adapter": "^14.0.38"
   }
 }
