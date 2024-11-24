@@ -5,7 +5,14 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./src/project/index.ts"
+      "types": "./out/project/types/index.d.js",
+      "import": "./out/project/index.js"
+    }
+  },
+  "imports": {
+    "#project": {
+      "types": "./out/project/types/project-index.d.js",
+      "import": "./out/project/project-index.js"
     }
   },
   "scripts": {
@@ -26,15 +33,15 @@
   "homepage": "https://github.com/FranzZemen/enhanced-error#readme",
   "devDependencies": {
     "@types/chai": "^5.0.1",
-    "@types/mocha": "^10.0.9",
-    "@types/node": "^22.9.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.9.3",
     "chai": "^5.1.2",
     "fastest-validator": "^1.19.0",
     "mocha": "^10.8.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@franzzemen/build-system": "^13.0.6",
-    "@franzzemen/logger-adapter": "^14.0.38"
+    "@franzzemen/build-system": "^14.0.6",
+    "@franzzemen/logger-adapter": "^14.0.39"
   }
 }
