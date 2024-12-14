@@ -34,14 +34,14 @@
   "devDependencies": {
     "@types/chai": "^5.0.1",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.9.3",
+    "@types/node": "^22.10.2",
     "chai": "^5.1.2",
     "fastest-validator": "^1.19.0",
-    "mocha": "^10.8.2",
+    "mocha": "^11.0.1",
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@franzzemen/build-system": "^14.0.6",
+    "@franzzemen/build-system": "^14.0.8",
     "@franzzemen/logger-adapter": "^14.0.39"
   }
 }
