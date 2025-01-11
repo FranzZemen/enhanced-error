@@ -38,7 +38,7 @@
     "chai": "^5.1.2",
     "fastest-validator": "^1.19.0",
     "mocha": "^11.0.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@franzzemen/build-system": "^14.0.9",
