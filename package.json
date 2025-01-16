@@ -1,6 +1,6 @@
 {
   "name": "@franzzemen/enhanced-error",
-  "version": "8.1.30",
+  "version": "8.1.31",
   "description": "Enhanced Errors",
   "type": "module",
   "exports": {
